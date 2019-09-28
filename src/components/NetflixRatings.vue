@@ -5,23 +5,23 @@
         <div>
           <h4 class="title">Netflix Ratings</h4>
           <div class="actions">
-            <button class="btn">Lowest rated</button>
-            <button class="btn">Highest rated</button>
+            <button @click="LowestRated" class="btn">Lowest rated</button>
+            <button @click="HighestRated" class="btn">Highest rated</button>
           </div>
         </div>
         <div class="search">
-          <input type="text" class="form-control" placeholder="Search by title" />
+          <input v-model="query" type="text" class="form-control" placeholder="Search by title" />
         </div>
       </div>
       <div class="content">
         <table class="table">
           <thead>
-            <th></th>
+            <th v-for="(item, index) in columns" :key="index">{{item}}</th>
           </thead>
           <tbody>
-            <tr>
-              <td></td>
-              <td></td>
+            <tr v-for="(item, index) in filteredMovies" :key="index">
+              <td>{{item.title}}</td>
+              <td>{{item.rating}}</td>
             </tr>
           </tbody>
         </table>
@@ -35,6 +35,7 @@ export default {
   name: "NetflixRatings",
   data: function() {
     return {
+      query: "",
       columns: ["title", "rating"],
       ratingsInfo: [
         { title: `Grey's Anatomy`, rating: 98 },
@@ -59,6 +60,26 @@ export default {
         { title: `Marvel's Iron Fist`, rating: 98 }
       ]
     };
+  },
+  computed: {
+    newRatingsinfo() {
+      return this.ratingsInfo.filter(val => val.title.includes(this.query));
+    },
+    filteredMovies() {
+      return this.ratingsInfo.filter(info => {
+        return info.title.toLowerCase().match(this.query.toLowerCase());
+      });
+    }
+  },
+  methods: {
+    LowestRated() {
+      this.ratingsInfo.sort();
+      this.ratingsInfo.sort((a, b) => (a.rating > b.rating ? 1 : -1));
+    },
+    HighestRated() {
+      this.ratingsInfo.sort;
+      this.ratingsInfo.sort((a, b) => (a.rating > b.rating ? -1 : +1));
+    }
   }
 };
 </script>
